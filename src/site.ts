@@ -21,7 +21,7 @@ export const SITE = {
 // Moyens de contact : remplis ceux que tu veux afficher, laisse '' pour masquer
 export const CONTACTS = [
   { label: 'GitHub', value: 'ShymusQuantum', href: 'https://github.com/ShymusQuantum' },
-  { label: 'Email', value: '', href: '' },          // ex. value: 'moi@exemple.fr', href: 'mailto:moi@exemple.fr'
+  { label: 'Email', value: 'shymus.quantum@outlook.fr', href: 'mailto:shymus.quantum@outlook.fr' },
   { label: 'LinkedIn', value: '', href: '' },
   { label: 'X / Twitter', value: '', href: '' },
   { label: 'Discord', value: '', href: '' },

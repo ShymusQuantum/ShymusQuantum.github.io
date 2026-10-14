@@ -23,8 +23,14 @@ const latest = [...articles.filter((p) => p.data.featured), ...articles.filter((
 
   <section class="section container">
     <div class="section-head"><h2>{t.latest}</h2><p>{t.latestSub}</p></div>
-    <div class="posts">{latest.map((post) => <PostCard post={post} lang={lang} />)}</div>
-    <p class="more-row"><a class="more" href={href(lang, '/posts/')}>{t.allPosts} ({articles.length}) →</a></p>
+    {latest.length ? (
+      <>
+        <div class="posts">{latest.map((post) => <PostCard post={post} lang={lang} />)}</div>
+        <p class="more-row"><a class="more" href={href(lang, '/posts/')}>{t.allPosts} ({articles.length}) →</a></p>
+      </>
+    ) : (
+      <p class="empty">{t.empty}</p>
+    )}
   </section>
 
   {writeups.length > 0 && (
