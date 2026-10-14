@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../site';
+import { UI, href, type Lang } from '../i18n';
+const { lang } = Astro.props as { lang: Lang };
+const t = UI[lang];
+---
+<Base lang={lang} title={t.aboutTitle} dim={0.6}>
+  <div class="container">
+    <div class="page-panel prose">
+      <h1 class="page-title">{t.aboutTitle}</h1>
+      {lang === 'fr' ? (
+        <>
+          <p>Salut, moi c'est <strong>{SITE.author}</strong>. Passionné de cybersécurité et de tout ce qui tourne autour de la Terre, j'écris ici ce que j'apprends : réception de satellites, radio logicielle (SDR), sécurité des systèmes spatiaux et CTF.</p>
+          <p><em>Texte à personnaliser : ton parcours, ce que tu cherches, ton matériel.</em></p>
+        </>
+      ) : (
+        <>
+          <p>Hey, I'm <strong>{SITE.author}</strong>. I'm into cybersecurity and anything orbiting the Earth, and this is where I write down what I learn: satellite reception, software-defined radio (SDR), space systems security and CTFs.</p>
+          <p><em>Text to customise: your background, what you are looking for, your gear.</em></p>
+        </>
+      )}
+      <p><a href={href(lang, '/contact/')}>{t.contactTitle} →</a></p>
+    </div>
+  </div>
+</Base>

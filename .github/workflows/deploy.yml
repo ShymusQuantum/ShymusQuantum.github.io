@@ -19,6 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Photo de fond : ALMA sous la Voie lactée, A. Duro/ESO (CC BY 4.0).
+      # Téléchargée seulement si tu n'as pas mis ta propre photo dans public/images/hero.jpg.
+      - name: Photo de fond
+        run: test -f public/images/hero.jpg || curl -fsSL -o public/images/hero.jpg https://cdn.eso.org/images/wallpaper4/duro_4776-cc.jpg || echo "photo indisponible, le ciel sera généré"
       - uses: withastro/action@v3
   deploy:
     needs: build

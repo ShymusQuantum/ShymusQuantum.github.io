@@ -1,10 +1,13 @@
 ---
+import { SITE } from '../site';
 interface Props { dim?: number }
 const { dim = 1 } = Astro.props;
 ---
+<img id="sky-photo" src={SITE.background.src} data-sky={SITE.background.sky} alt="" aria-hidden="true" decoding="async" />
 <canvas id="sky" data-dim={dim} aria-hidden="true"></canvas>
 <script>
   import { startSky } from '../scripts/sky.js';
   const c = document.getElementById('sky') as HTMLCanvasElement | null;
-  if (c) startSky(c);
+  const img = document.getElementById('sky-photo') as HTMLImageElement | null;
+  if (c) startSky(c, img);
 </script>

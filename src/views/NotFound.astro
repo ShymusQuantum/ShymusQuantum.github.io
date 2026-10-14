@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import { UI, href, type Lang } from '../i18n';
+const { lang } = Astro.props as { lang: Lang };
+const t = UI[lang];
+---
+<Base lang={lang} title="404">
+  <section class="hero container">
+    <p class="hello">// 404</p>
+    <h1>{t.notFound}</h1>
+    <p class="bio">{t.notFoundText}</p>
+    <div class="links"><a href={href(lang, '/')}>{t.home}</a></div>
+  </section>
+</Base>

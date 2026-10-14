@@ -1,0 +1,10 @@
+---
+import Tag from '../../../views/Tag.astro';
+import { getPosts, slugify } from '../../../site';
+export async function getStaticPaths() {
+  const posts = await getPosts('en');
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+  return tags.map((t) => ({ params: { tag: slugify(t) }, props: { name: t, posts: posts.filter((p) => p.data.tags.includes(t)) } }));
+}
+---
+<Tag lang="en" name={Astro.props.name} posts={Astro.props.posts} />

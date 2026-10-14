@@ -1,6 +1,5 @@
-// Ciel nocturne réaliste vu du sol : Voie lactée, étoiles, satellites,
-// et une grande antenne parabolique qui suit lentement les satellites.
-// Tout est généré dans le navigateur, sans image.
+// Ciel nocturne : satellites et étoiles filantes animés par-dessus une vraie photo.
+// Si la photo manque, le ciel entier (Voie lactée, étoiles, relief) est généré.
 
 const TAU = Math.PI * 2;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -40,8 +39,12 @@ function starColor(r) {
   return [205, 220, 255];                 // B, bleutées
 }
 
-export function startSky(canvas) {
+// photo : <img> de fond (vraie photo). Si elle charge, on ne dessine que les
+// satellites et les étoiles filantes par-dessus ; sinon on génère tout le ciel.
+export function startSky(canvas, photo) {
   const ctx = canvas.getContext('2d');
+  let photoMode = !!(photo && photo.complete && photo.naturalWidth);
+  const skyLimit = parseFloat(photo?.dataset.sky || '0.5');   // part haute de la photo occupée par le ciel
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const dim = parseFloat(canvas.dataset.dim || '1');
   const fbm = makeNoise(1337);
@@ -52,8 +55,6 @@ export function startSky(canvas) {
   let lastSpawn = 0, nextTrain = 90000 + Math.random() * 120000;
   let scrollFade = 1, groundShift = 0;
 
-  // Antenne : orientation courante (rad) et cible
-  const dish = { az: 0.9, el: 0.55, taz: 0.9, tel: 0.55, target: null, scanT: 0 };
 
   function rand(a, b) { return a + Math.random() * (b - a); }
 
@@ -180,7 +181,7 @@ export function startSky(canvas) {
     W = canvas.width = Math.round(innerWidth * dpr);
     H = canvas.height = Math.round(innerHeight * dpr);
     canvas.style.width = innerWidth + 'px'; canvas.style.height = innerHeight + 'px';
-    horizon = Math.round(H * (innerWidth < 700 ? 0.74 : 0.7));
+    horizon = Math.round(H * (photoMode ? skyLimit : innerWidth < 700 ? 0.74 : 0.7));
     buildSky(); buildGround(); buildStars();
   }
 
@@ -218,160 +219,16 @@ export function startSky(canvas) {
     return { t, x: lerp(s.x0, s.x1, t), y: lerp(s.y0, s.y1, t) };
   }
 
-  // --- Antenne parabolique en 3D -----------------------------------------
-  function drawDish(now) {
-    const mobile = innerWidth < 700;
-    const R = Math.min(W * (mobile ? 0.22 : 0.15), H * 0.2);   // rayon de la parabole
-    const baseX = W * (mobile ? 0.78 : 0.78), groundY = horizon + H * 0.1 + groundShift;
-    const pivot = [0, R * 1.55, 0];              // axe d'élévation, au sommet du pylône
-    const f = R * 0.72;                          // focale
-    const tilt = 0.16;                           // caméra légèrement au-dessus
-    const ct = Math.cos(tilt), st = Math.sin(tilt);
-    const P = (v) => {
-      const x = v[0], y = v[1] * ct - v[2] * st, z = v[1] * st + v[2] * ct;
-      const k = 1 / (1 - z / (R * 14));            // perspective faible
-      return [baseX + x * k, groundY - y * k, z];
-    };
-    const { az, el } = dish;
-    const n = [Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el)];
-    let u = [n[2], 0, -n[0]]; const ul = Math.hypot(u[0], u[2]) || 1; u = [u[0] / ul, 0, u[2] / ul];
-    const v = [n[1] * u[2] - n[2] * u[1], n[2] * u[0] - n[0] * u[2], n[0] * u[1] - n[1] * u[0]];
-    const vertex = pivot.map((c, i) => c + n[i] * R * 0.12);
-    const S = (r, phi) => {
-      const c = Math.cos(phi), s = Math.sin(phi), z = (r * r) / (4 * f);
-      return [0, 1, 2].map((i) => vertex[i] + u[i] * r * c + v[i] * r * s + n[i] * z);
-    };
-    const light = [-0.45, 0.75, 0.48]; // clair de lune diffus venant de la gauche
-    const toCam = [0, st, ct];
-
-    // pylône en béton
-    const towerTop = P([0, R * 1.2, 0]), tw = R * 0.24, tb = R * 0.38;
-    const tg = ctx.createLinearGradient(baseX - tb, 0, baseX + tb, 0);
-    tg.addColorStop(0, '#20242c'); tg.addColorStop(0.45, '#151820'); tg.addColorStop(1, '#07080b');
-    ctx.fillStyle = tg;
-    ctx.beginPath();
-    ctx.moveTo(baseX - tb, groundY + R * 0.06); ctx.lineTo(baseX - tw, towerTop[1]);
-    ctx.lineTo(baseX + tw, towerTop[1]); ctx.lineTo(baseX + tb, groundY + R * 0.06); ctx.closePath(); ctx.fill();
-    // tourelle d'azimut
-    ctx.fillStyle = '#1a1d24';
-    ctx.fillRect(baseX - tw * 1.15, towerTop[1] - R * 0.12, tw * 2.3, R * 0.14);
-
-    // bras de la fourche, jusqu'aux deux extrémités de l'axe d'élévation
-    const arms = [-1, 1].map((sg) => {
-      const end = pivot.map((c, i) => c + u[i] * R * 0.36 * sg);
-      return { end: P(end), foot: P([u[0] * R * 0.26 * sg, R * 1.2, u[2] * R * 0.26 * sg]), z: P(end)[2] };
-    });
-    const drawArm = (a) => {
-      ctx.strokeStyle = '#14171d'; ctx.lineWidth = R * 0.09; ctx.lineCap = 'butt';
-      ctx.beginPath(); ctx.moveTo(a.foot[0], a.foot[1]); ctx.lineTo(a.end[0], a.end[1]); ctx.stroke();
-    };
-    arms.sort((a, b) => a.z - b.z);
-    drawArm(arms[0]);
-
-    // surface de la parabole découpée en facettes, triées de l'arrière vers l'avant
-    const NR = 14, NS = 40, quads = [];
-    for (let i = 0; i < NR; i++) {
-      const r0 = (R * i) / NR, r1 = (R * (i + 1)) / NR;
-      for (let j = 0; j < NS; j++) {
-        const p0 = (TAU * j) / NS, p1 = (TAU * (j + 1)) / NS;
-        const a = S(r0, p0), b = S(r1, p0), c = S(r1, p1), d = S(r0, p1);
-        const e1 = [c[0] - a[0], c[1] - a[1], c[2] - a[2]], e2 = [d[0] - b[0], d[1] - b[1], d[2] - b[2]];
-        let nn = [e1[1] * e2[2] - e1[2] * e2[1], e1[2] * e2[0] - e1[0] * e2[2], e1[0] * e2[1] - e1[1] * e2[0]];
-        const nl = Math.hypot(...nn) || 1; nn = nn.map((q) => q / nl);
-        if (nn[0] * n[0] + nn[1] * n[1] + nn[2] * n[2] < 0) nn = nn.map((q) => -q); // normale côté intérieur
-        const facing = nn[0] * toCam[0] + nn[1] * toCam[1] + nn[2] * toCam[2];
-        const inside = facing > 0;
-        const N = inside ? nn : nn.map((q) => -q);
-        const diff = Math.max(0, N[0] * light[0] + N[1] * light[1] + N[2] * light[2]);
-        const sky = 0.5 + 0.5 * N[1];
-        const pa = P(a), pb = P(b), pc = P(c), pd = P(d);
-        quads.push({ pts: [pa, pb, pc, pd], z: (pa[2] + pb[2] + pc[2] + pd[2]) / 4, inside, diff, sky, ring: i });
-      }
-    }
-    quads.sort((q1, q2) => q1.z - q2.z);
-    for (const q of quads) {
-      // intérieur peint en blanc mat, dos en métal plus sombre
-      const L = q.inside ? 0.03 + 0.42 * q.diff ** 3 + 0.07 * q.sky * (0.4 + 0.6 * q.ring / NR) : 0.025 + 0.12 * q.diff ** 2 + 0.03 * q.sky;
-      const base = q.inside ? [200, 208, 222] : [150, 158, 172];
-      ctx.fillStyle = `rgb(${base[0] * L},${base[1] * L},${base[2] * L})`;
-      ctx.strokeStyle = ctx.fillStyle;
-      ctx.lineWidth = 0.8;
-      ctx.beginPath();
-      ctx.moveTo(q.pts[0][0], q.pts[0][1]);
-      for (let k = 1; k < 4; k++) ctx.lineTo(q.pts[k][0], q.pts[k][1]);
-      ctx.closePath(); ctx.fill(); ctx.stroke();
-    }
-    // lèvre de la parabole légèrement éclairée
-    ctx.strokeStyle = 'rgba(170,182,205,0.35)'; ctx.lineWidth = 1.2 * dpr;
-    ctx.beginPath();
-    for (let j = 0; j <= 64; j++) { const p = P(S(R, (TAU * j) / 64)); j ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
-    ctx.stroke();
-
-    // quadripode et source au foyer
-    const focus = vertex.map((c, i) => c + n[i] * f);
-    const pf = P(focus);
-    ctx.strokeStyle = 'rgba(30,34,42,1)'; ctx.lineWidth = Math.max(1, R * 0.018);
-    for (let k = 0; k < 4; k++) {
-      const rp = P(S(R * 0.97, TAU * (k / 4 + 0.125)));
-      ctx.beginPath(); ctx.moveTo(rp[0], rp[1]); ctx.lineTo(pf[0], pf[1]); ctx.stroke();
-    }
-    ctx.fillStyle = '#1b1f27';
-    ctx.beginPath(); ctx.arc(pf[0], pf[1], R * 0.07, 0, TAU); ctx.fill();
-    drawArm(arms[1]);
-
-    // feu de balisage rouge qui clignote au sommet
-    const blink = (now % 2400) < 260;
-    const bx = pf[0], by = pf[1] - R * 0.08;
-    const glowR = (blink ? 16 : 5) * dpr;
-    const gl = ctx.createRadialGradient(bx, by, 0, bx, by, glowR);
-    gl.addColorStop(0, blink ? 'rgba(255,60,40,0.95)' : 'rgba(150,30,25,0.6)');
-    gl.addColorStop(1, 'rgba(255,40,30,0)');
-    ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(bx, by, glowR, 0, TAU); ctx.fill();
-
-    return { x: baseX, y: P(pivot)[1] };
-  }
-
-  // la parabole pivote lentement vers le satellite suivi
-  function aimDish(dt, now, dishPos) {
-    if (!dish.target || !sats.includes(dish.target) || satPos(dish.target, now).t > 0.92) {
-      const cands = sats.filter((s) => { const p = satPos(s, now); return p.t > 0.05 && p.t < 0.6; });
-      dish.target = cands.length ? cands[Math.floor(Math.random() * cands.length)] : null;
-    }
-    if (dish.target) {
-      const p = satPos(dish.target, now);
-      const dx = (p.x - dishPos.x) / W;
-      dish.taz = clamp(dx * 2.6, -1.9, 1.9) + Math.PI * 0.08;
-      dish.tel = clamp(0.25 + 1.1 * (1 - p.y / horizon), 0.2, 1.35);
-    } else {
-      dish.scanT += dt;
-      dish.taz = 0.9 * Math.sin(dish.scanT / 40000);
-      dish.tel = 0.6 + 0.15 * Math.sin(dish.scanT / 23000);
-    }
-    const rate = 0.03 * (dt / 1000); // ~1,7 °/s, comme une vraie monture
-    dish.az += clamp(dish.taz - dish.az, -rate, rate);
-    dish.el += clamp(dish.tel - dish.el, -rate * 0.7, rate * 0.7);
-  }
-
-  let dishPos = { x: 0, y: 0 }, last = performance.now(), running = true, lastTele = 0;
-
-  // publie l'orientation de l'antenne pour le relevé de télémétrie de la page
-  function telemetry(now) {
-    if (now - lastTele < 400) return;
-    lastTele = now;
-    const deg = (r) => (r * 180) / Math.PI;
-    const azimut = (((180 + deg(dish.az)) % 360) + 360) % 360;
-    window.dispatchEvent(new CustomEvent('sky:telemetry', {
-      detail: { az: azimut, el: deg(dish.el), tracking: !!dish.target, id: dish.target ? dish.target.id : null },
-    }));
-  }
+  let last = performance.now(), running = true;
 
   function frame(now) {
     const dt = Math.min(100, now - last); last = now;
     ctx.globalAlpha = 1;
-    ctx.drawImage(skyLayer, 0, 0);
+    if (photoMode) ctx.clearRect(0, 0, W, H);
+    else ctx.drawImage(skyLayer, 0, 0);
 
     // étoiles brillantes : scintillation plus forte près de l'horizon
-    for (const s of stars) {
+    if (!photoMode) for (const s of stars) {
       const turb = 0.08 + 0.35 * (s.y / horizon) ** 3;
       const a = (0.35 + 0.65 * s.m) * (1 - turb + turb * Math.sin(s.ph + now * 0.001 * s.sp * 3));
       const size = (0.6 + 1.5 * s.m) * dpr;
@@ -419,9 +276,7 @@ export function startSky(canvas) {
       ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(hx - Math.cos(m.a) * m.l * 0.5, hy - Math.sin(m.a) * m.l * 0.5); ctx.stroke();
     }
 
-    ctx.drawImage(groundLayer, 0, groundShift);
-    if (groundShift < H) { aimDish(dt, now, dishPos); dishPos = drawDish(now); }
-    telemetry(now);
+    if (!photoMode) ctx.drawImage(groundLayer, 0, groundShift);
 
     if (running && !reduce) requestAnimationFrame(frame);
   }
@@ -431,9 +286,18 @@ export function startSky(canvas) {
     scrollFade = 1 - 0.72 * t;
     groundShift = t * H * 0.35;            // le sol s'enfonce : on lève les yeux vers le ciel
     canvas.style.opacity = String(scrollFade * dim);
+    if (photo) {
+      photo.style.opacity = String(scrollFade * dim);
+      photo.style.transform = `translateY(${t * 6}vh) scale(1.06)`;   // léger parallaxe
+    }
     if (reduce) frame(performance.now());
   }
 
+  if (photo && photo.complete && !photo.naturalWidth) { photo.remove(); photo = null; }
+  if (photo && !photoMode) {
+    photo.addEventListener('load', () => { photoMode = true; resize(); }, { once: true });
+    photo.addEventListener('error', () => { photo.remove(); }, { once: true });
+  }
   resize(); onScroll();
   // préchauffage : quelques satellites déjà en vol à l'arrivée
   const t0 = performance.now();

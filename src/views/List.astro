@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import { getPosts } from '../site';
+import { UI, type Lang } from '../i18n';
+const { lang, kind } = Astro.props as { lang: Lang; kind: 'article' | 'writeup' };
+const t = UI[lang];
+const posts = await getPosts(lang, kind);
+const title = kind === 'writeup' ? t.writeupsTitle : t.postsTitle;
+const sub = kind === 'writeup' ? t.writeupsSub : t.postsSub;
+---
+<Base lang={lang} title={title} description={sub} dim={0.75}>
+  <section class="section container">
+    <div class="section-head"><h2>{title}</h2><p>{sub} · {t.published(posts.length)}</p></div>
+    {posts.length ? (
+      <div class="posts">{posts.map((post) => <PostCard post={post} lang={lang} />)}</div>
+    ) : (
+      <p class="empty">{t.empty}</p>
+    )}
+  </section>
+</Base>

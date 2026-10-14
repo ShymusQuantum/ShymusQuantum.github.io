@@ -1,0 +1,35 @@
+---
+import { render, getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { formatDate, readingTime, slugify, postSlug } from '../site';
+import { UI, href, other, type Lang } from '../i18n';
+const { post, lang } = Astro.props as { post: any; lang: Lang };
+const t = UI[lang];
+const { Content } = await render(post);
+const d = post.data;
+const slug = postSlug(post.id);
+// lien vers la traduction si elle existe, sinon vers la liste de l'autre langue
+const translations = await getCollection('posts', ({ id }) => id === `${other(lang)}/${slug}`);
+const alt = translations.length ? href(other(lang), `/posts/${slug}/`) : href(other(lang), d.kind === 'writeup' ? '/writeups/' : '/posts/');
+const backTo = href(lang, d.kind === 'writeup' ? '/writeups/' : '/posts/');
+---
+<Base lang={lang} title={d.title} description={d.description} image={d.image} dim={0.6} alt={alt}>
+  <article class="container">
+    <div class="page-panel">
+      <a class="more" href={backTo}>{t.back}</a>
+      <p class="post-cat">{d.kind === 'writeup' ? 'writeup · ' : ''}{d.category}</p>
+      <h1 class="page-title">{d.title}</h1>
+      <div class="meta" style="margin-bottom:22px">
+        <time datetime={d.date.toISOString()}>{formatDate(d.date, lang)}</time>
+        <span>{readingTime(post.body)} {t.minRead}</span>
+      </div>
+      {d.image && <figure class="post-cover"><img src={d.image} alt={d.imageAlt ?? ''} /></figure>}
+      <div class="prose"><Content /></div>
+      {d.tags.length > 0 && (
+        <div class="tags" style="margin-top:34px">
+          {d.tags.map((tag: string) => <a class="tag" href={href(lang, `/tags/${slugify(tag)}/`)}>#{tag}</a>)}
+        </div>
+      )}
+    </div>
+  </article>
+</Base>

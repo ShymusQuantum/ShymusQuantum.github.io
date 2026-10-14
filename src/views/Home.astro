@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import { SITE, getPosts } from '../site';
+import { UI, href, type Lang } from '../i18n';
+const { lang } = Astro.props as { lang: Lang };
+const t = UI[lang];
+const articles = await getPosts(lang, 'article');
+const writeups = await getPosts(lang, 'writeup');
+const latest = [...articles.filter((p) => p.data.featured), ...articles.filter((p) => !p.data.featured)].slice(0, 3);
+---
+<Base lang={lang}>
+  <section class="hero container">
+    <p class="hello">{t.hello} {SITE.author}.</p>
+    <h1>{t.heroTitle}</h1>
+    <p class="bio">{t.heroBio}</p>
+    <div class="links">
+      <a href={href(lang, '/posts/')}>{t.readPosts}</a>
+      <a href={href(lang, '/about/')}>{t.whoAmI}</a>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-head"><h2>{t.latest}</h2><p>{t.latestSub}</p></div>
+    <div class="posts">{latest.map((post) => <PostCard post={post} lang={lang} />)}</div>
+    <p class="more-row"><a class="more" href={href(lang, '/posts/')}>{t.allPosts} ({articles.length}) →</a></p>
+  </section>
+
+  {writeups.length > 0 && (
+    <section class="section container">
+      <div class="section-head"><h2>{t.latestWriteups}</h2><p>{t.writeupsSub}</p></div>
+      <div class="posts">{writeups.slice(0, 2).map((post) => <PostCard post={post} lang={lang} />)}</div>
+      <p class="more-row"><a class="more" href={href(lang, '/writeups/')}>{t.allWriteups} ({writeups.length}) →</a></p>
+    </section>
+  )}
+</Base>

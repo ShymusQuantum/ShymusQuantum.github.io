@@ -20,5 +20,5 @@ et sur les satellites : des expériences, des writeups de CTF, des notes de rech
 ## sous le capot
 
 Le site est généré avec [Astro](https://astro.build) et hébergé gratuitement sur GitHub Pages.
-Le ciel en arrière-plan est calculé en direct dans ton navigateur : les satellites que tu vois passer
-et l'antenne qui les suit ne sont pas une vidéo.
+En fond, une vraie photo des antennes d'ALMA sous la Voie lactée (ESO). Les satellites
+qui passent dans le ciel sont animés en direct dans ton navigateur.

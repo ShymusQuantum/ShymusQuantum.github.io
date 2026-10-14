@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import { CONTACTS } from '../site';
+import { UI, type Lang } from '../i18n';
+const { lang } = Astro.props as { lang: Lang };
+const t = UI[lang];
+---
+<Base lang={lang} title={t.contactTitle} dim={0.65}>
+  <div class="container">
+    <div class="page-panel">
+      <h1 class="page-title">{t.contactTitle}</h1>
+      <p class="lead">{t.contactIntro}</p>
+      <ul class="contacts">
+        {CONTACTS.map((c) => (
+          <li><span>{c.label}</span><a href={c.href}>{c.value}</a></li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</Base>

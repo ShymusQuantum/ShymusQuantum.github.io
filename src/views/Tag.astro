@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import { UI, href, type Lang } from '../i18n';
+const { lang, name, posts } = Astro.props as { lang: Lang; name: string; posts: any[] };
+const t = UI[lang];
+---
+<Base lang={lang} title={`#${name}`} dim={0.75} alt={href(lang === 'fr' ? 'en' : 'fr', '/tags/')}>
+  <section class="section container">
+    <div class="section-head">
+      <h2>#{name}</h2>
+      <p>{t.count(posts.length)} · <a href={href(lang, '/tags/')}>{t.allTags}</a></p>
+    </div>
+    <div class="posts">{posts.map((post) => <PostCard post={post} lang={lang} />)}</div>
+  </section>
+</Base>

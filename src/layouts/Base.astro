@@ -1,16 +1,28 @@
 ---
 import '../styles/global.css';
 import Sky from '../components/Sky.astro';
-import { SITE, NAV } from '../site';
+import { SITE } from '../site';
+import { UI, href, other, stripLang, type Lang } from '../i18n';
 
-interface Props { title?: string; description?: string; image?: string; dim?: number }
-const { title, description = SITE.description, image, dim = 1 } = Astro.props;
-const fullTitle = title ? `${title} · ${SITE.title}` : `${SITE.title} · ${SITE.tagline}`;
+interface Props { lang: Lang; title?: string; description?: string; image?: string; dim?: number; alt?: string }
+const { lang, title, image, dim = 1 } = Astro.props;
+const t = UI[lang];
+const description = Astro.props.description ?? t.description;
+const fullTitle = title ? `${title} · ${SITE.title}` : `${SITE.title} · ${t.tagline}`;
 const path = Astro.url.pathname;
+const bare = stripLang(path);
+const altPath = Astro.props.alt ?? href(other(lang), bare);
 const ogImage = new URL(image ?? '/images/og.jpg', Astro.site);
+const nav = [
+  { path: '/posts/', label: t.nav.posts },
+  { path: '/writeups/', label: t.nav.writeups },
+  { path: '/tags/', label: t.nav.tags },
+  { path: '/contact/', label: t.nav.contact },
+  { path: '/about/', label: t.nav.about },
+];
 ---
 <!doctype html>
-<html lang="fr">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,23 +31,28 @@ const ogImage = new URL(image ?? '/images/og.jpg', Astro.site);
     <meta name="theme-color" content="#02040a" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="canonical" href={new URL(path, Astro.site)} />
-    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+    <link rel="alternate" hreflang={other(lang)} href={new URL(altPath, Astro.site)} />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href={href(lang, '/rss.xml')} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={lang === 'fr' ? 'fr_FR' : 'en_US'} />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;600&display=swap" />
   </head>
   <body>
-    <a class="skip" href="#main">Aller au contenu</a>
+    <a class="skip" href="#main">{t.skip}</a>
     <Sky dim={dim} />
     <header class="site-header">
       <div class="container">
-        <a class="brand" href="/">ShymusQuantum<span>_</span></a>
-        <nav class="nav" aria-label="Navigation principale">
-          {NAV.map((l) => <a href={l.href} aria-current={path.startsWith(l.href) ? 'page' : undefined}>{l.label}</a>)}
+        <a class="brand" href={href(lang, '/')}>ShymusQuantum<span>_</span></a>
+        <nav class="nav" aria-label="Navigation">
+          {nav.map((l) => (
+            <a href={href(lang, l.path)} aria-current={bare.startsWith(l.path) ? 'page' : undefined}>{l.label}</a>
+          ))}
+          <a class="lang" href={altPath} hreflang={other(lang)} lang={other(lang)} title={t.switchLabel}>{other(lang).toUpperCase()}</a>
         </nav>
       </div>
     </header>
@@ -44,8 +61,8 @@ const ogImage = new URL(image ?? '/images/og.jpg', Astro.site);
     </main>
     <footer class="site-footer">
       <div class="container">
-        <span>© {new Date().getFullYear()} {SITE.author} · <a href="/rss.xml">rss</a></span>
-        <span><a href={SITE.github}>github</a></span>
+        <span>© {new Date().getFullYear()} {SITE.author} · <a href={href(lang, '/rss.xml')}>rss</a> · <a href={SITE.github}>github</a></span>
+        <span>{t.photo} : <a href={SITE.background.creditUrl}>{SITE.background.credit}</a> ({SITE.background.license})</span>
       </div>
     </footer>
   </body>

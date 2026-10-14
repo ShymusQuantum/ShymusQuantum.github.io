@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import { getPosts, slugify } from '../site';
+import { UI, href, type Lang } from '../i18n';
+const { lang } = Astro.props as { lang: Lang };
+const t = UI[lang];
+const posts = await getPosts(lang);
+const counts = new Map<string, number>();
+posts.forEach((p) => p.data.tags.forEach((tag) => counts.set(tag, (counts.get(tag) ?? 0) + 1)));
+const tags = [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+---
+<Base lang={lang} title={t.tagsTitle} dim={0.7}>
+  <div class="container">
+    <div class="page-panel">
+      <h1 class="page-title">{t.tagsTitle}</h1>
+      <div class="tags">
+        {tags.map(([tag, n]) => <a class="tag" href={href(lang, `/tags/${slugify(tag)}/`)}>#{tag} <small>{n}</small></a>)}
+      </div>
+    </div>
+  </div>
+</Base>

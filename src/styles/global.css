@@ -23,6 +23,16 @@ body {
   display: flex; flex-direction: column;
 }
 #sky { position: fixed; inset: 0; z-index: -1; pointer-events: none; transition: opacity .15s linear; }
+#sky-photo {
+  position: fixed; inset: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none;
+  object-fit: cover; object-position: center 70%; transform: scale(1.06); transform-origin: center top;
+  transition: opacity .15s linear;
+}
+/* voile sombre en bas de l'écran pour garder le texte lisible sur la photo */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(2,4,10,0.15) 0%, rgba(2,4,10,0.05) 40%, rgba(2,4,10,0.55) 100%);
+}
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; text-underline-offset: 3px; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
@@ -57,20 +67,6 @@ main { flex: 1; }
 }
 .hero p.bio { max-width: 52ch; margin: 0 0 22px; color: var(--fg); text-shadow: 0 1px 12px rgba(0, 0, 0, 0.8); }
 .hero .links { display: flex; gap: 20px; flex-wrap: wrap; font: 0.9rem var(--f-mono); }
-
-/* Petit relevé de télémétrie de la station */
-.telemetry {
-  display: inline-flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 34px; align-self: flex-start;
-  font: 0.72rem var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
-  padding: 7px 12px; border: 1px solid var(--line); border-radius: 6px; background: rgba(2, 4, 10, 0.5);
-  backdrop-filter: blur(6px); font-variant-numeric: tabular-nums;
-}
-.telemetry .live::before {
-  content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--beacon); margin-right: 7px; vertical-align: 1px; animation: blink 2.4s infinite;
-}
-.telemetry b { color: var(--fg); font-weight: 400; }
-@keyframes blink { 0%, 11% { opacity: 1; } 12%, 100% { opacity: 0.25; } }
 
 /* Sections */
 .section { padding-block: 34px; }
@@ -152,6 +148,13 @@ main { flex: 1; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .card, #sky { transition: none; }
-  .telemetry .live::before { animation: none; }
 }
 .post-cat { margin: 22px 0 0; font: 0.75rem var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.nav .lang { color: var(--head); border: 1px solid var(--line); border-radius: 5px; padding: 0 6px; }
+.nav .lang:hover { border-color: var(--accent); }
+.more-row { margin-top: 18px; }
+.empty { color: var(--muted); font: 0.9rem var(--f-mono); }
+.lead { max-width: 60ch; margin: 0 0 24px; }
+.contacts { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; }
+.contacts li { display: flex; gap: 20px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: baseline; flex-wrap: wrap; }
+.contacts span { font: 0.78rem var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); width: 12ch; flex: none; }

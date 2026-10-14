@@ -1,37 +1,9 @@
 ---
-import { render } from 'astro:content';
-import Base from '../../layouts/Base.astro';
-import { getPosts, formatDate, readingTime, slugify } from '../../site';
-
+import Post from '../../views/Post.astro';
+import { getPosts, postSlug } from '../../site';
 export async function getStaticPaths() {
-  const posts = await getPosts();
-  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+  const posts = await getPosts('fr');
+  return posts.map((post) => ({ params: { slug: postSlug(post.id) }, props: { post } }));
 }
-const { post } = Astro.props;
-const { Content } = await render(post);
-const d = post.data;
 ---
-<Base title={d.title} description={d.description} image={d.image} dim={0.6}>
-  <article class="container">
-    <div class="page-panel">
-      <a class="more" href="/posts/">← articles</a>
-      <p class="post-cat">{d.category}</p>
-      <h1 class="page-title">{d.title}</h1>
-      <div class="meta" style="margin-bottom:22px">
-        <time datetime={d.date.toISOString()}>{formatDate(d.date)}</time>
-        <span>{readingTime(post.body)} min de lecture</span>
-      </div>
-      {d.image && (
-        <figure class="post-cover"><img src={d.image} alt={d.imageAlt ?? ''} /></figure>
-      )}
-      <div class="prose">
-        <Content />
-      </div>
-      {d.tags.length > 0 && (
-        <div class="tags" style="margin-top:34px">
-          {d.tags.map((t) => <a class="tag" href={`/tags/${slugify(t)}/`}>#{t}</a>)}
-        </div>
-      )}
-    </div>
-  </article>
-</Base>
+<Post lang="fr" post={Astro.props.post} />
