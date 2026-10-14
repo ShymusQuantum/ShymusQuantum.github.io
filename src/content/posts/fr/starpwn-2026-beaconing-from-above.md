@@ -1,7 +1,7 @@
 ---
 title: "Beaconing from above : lire une balise morse au chronomètre"
 description: "Un fichier audio, un ton à 600 Hz et une seule mesure à faire : la durée de l'unité morse."
-date: 2026-08-09
+date: 2026-08-13
 event: Starpwn CTF 2026
 category: Space Comms & RF
 kind: writeup

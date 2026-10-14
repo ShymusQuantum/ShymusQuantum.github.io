@@ -1,7 +1,7 @@
 ---
 title: "Time to Intercept : transfert de Hohmann et phasage orbital"
 description: "Un service TCP, deux nombres à renvoyer : le delta-v de la manœuvre et surtout l'instant précis du tir."
-date: 2026-08-09
+date: 2026-09-04
 event: Starpwn CTF 2026
 category: Space Operations
 kind: writeup

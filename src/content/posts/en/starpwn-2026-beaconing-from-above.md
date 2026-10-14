@@ -1,7 +1,7 @@
 ---
 title: "Beaconing from above: reading a morse beacon with a stopwatch"
 description: "An audio file, a 600 Hz tone and a single measurement to make: the duration of the morse unit."
-date: 2026-08-09
+date: 2026-08-13
 event: Starpwn CTF 2026
 category: Space Comms & RF
 kind: writeup

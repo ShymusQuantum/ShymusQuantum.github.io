@@ -1,7 +1,7 @@
 ---
 title: "Starry hacks : la chaîne d'approvisionnement d'un logiciel de vol"
 description: "Pourquoi une contrainte de version trop permissive dans requirements.txt est une surface d'attaque, et comment la fenêtre de liaison LEO change tout."
-date: 2026-08-09
+date: 2026-09-10
 event: Starpwn CTF 2026
 category: Supply chain
 kind: writeup

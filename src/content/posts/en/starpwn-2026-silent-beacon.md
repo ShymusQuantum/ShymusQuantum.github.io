@@ -1,7 +1,7 @@
 ---
 title: "Silent Beacon: the flag hidden in the housekeeping"
 description: "124 CCSDS packets, a telemetry dictionary, and a mode field that steps outside its allowed range."
-date: 2026-08-09
+date: 2026-08-29
 event: Starpwn CTF 2026
 category: Space Operations
 kind: writeup

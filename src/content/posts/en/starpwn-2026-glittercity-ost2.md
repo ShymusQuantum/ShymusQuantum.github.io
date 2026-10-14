@@ -1,7 +1,7 @@
 ---
 title: "Glittercity OST2: three fractured calls, a 179 x 7 pixel image"
 description: "The 500-point RF challenge: calibration witness, ASM, majority vote, XOR proven by popcount, and a flag drawn line by line."
-date: 2026-08-09
+date: 2026-08-24
 event: Starpwn CTF 2026
 category: Space Comms & RF
 kind: writeup

@@ -1,7 +1,7 @@
 ---
 title: "Glittercity OST2 : trois appels fracturés, une image en 179 × 7 pixels"
 description: "Le 500 points de la catégorie RF : salve témoin, ASM, vote majoritaire, XOR prouvé par popcount et un flag dessiné ligne par ligne."
-date: 2026-08-09
+date: 2026-08-24
 event: Starpwn CTF 2026
 category: Space Comms & RF
 kind: writeup

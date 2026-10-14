@@ -1,7 +1,7 @@
 ---
 title: "Starry hacks: the supply chain of a flight software stack"
 description: "Why a too-permissive version constraint in requirements.txt is an attack surface, and how the LEO contact window changes everything."
-date: 2026-08-09
+date: 2026-09-10
 event: Starpwn CTF 2026
 category: Supply chain
 kind: writeup
