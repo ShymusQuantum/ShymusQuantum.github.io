@@ -10,6 +10,7 @@ const posts = defineCollection({
     description: z.string(),
     date: z.coerce.date(),
     category: z.string(),
+    event: z.string().optional(),       // ex. Starpwn CTF 2026 (pour les writeups)
     tags: z.array(z.string()).default([]),
     image: z.string().optional(),        // ex. /images/posts/mon-image.jpg
     imageAlt: z.string().optional(),

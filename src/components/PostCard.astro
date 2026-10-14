@@ -8,7 +8,7 @@ const d = post.data;
 <a class:list={['card', { noimg: !d.image }]} href={href(lang, `/posts/${postSlug(post.id)}/`)}>
   {d.image && <div class="thumb"><img src={d.image} alt={d.imageAlt ?? ''} loading="lazy" /></div>}
   <div class="body">
-    <span class="cat">{d.kind === 'writeup' ? 'writeup · ' : ''}{d.category}</span>
+    <span class="cat">{d.event ? `${d.event} · ` : d.kind === 'writeup' ? 'writeup · ' : ''}{d.category}</span>
     <h3>{d.title}</h3>
     <p>{d.description}</p>
     <div class="meta">
