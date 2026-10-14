@@ -7,7 +7,7 @@ category: Space Comms & RF
 kind: writeup
 featured: true
 tags: [starpwn-2026, rf, fsk, doppler, ccsds, xor, envisat]
-image: /images/writeups/glittercity-ost2/fig1.jpg
+image: /images/writeups/glittercity-ost2/fig1.en.jpg
 imageAlt: "L-R channel spectrogram: one horizontal calibration burst then three sliding calls"
 ---
 
@@ -55,7 +55,7 @@ Glittercity-OST2.mp3 (stereo, 48 kHz, 2 min 21 s)
 
 Same trick as OST1: `d = L - R`. The spectrogram already answers two questions.
 
-![L-R channel: four bursts, the first horizontal, the three others sloping](/images/writeups/glittercity-ost2/fig1.jpg)
+![L-R channel: four bursts, the first horizontal, the three others sloping](/images/writeups/glittercity-ost2/fig1.en.jpg)
 
 There are **four bursts**, not three. And the first is perfectly horizontal while the other three slide. A
 transmitter without Doppler is a stationary transmitter: burst 1 comes **from the ground**.
@@ -112,7 +112,7 @@ problem whose answer you know separates setup errors from understanding errors.
 The three calls contain the CCSDS ASM `1A CF FC 1D`, at bits 68, 66 and 76. I align the three streams on it. They
 agree to 90–94 %, but what matters is **where** they disagree.
 
-![The three calls zoomed in: each has a silent zone, never in the same place](/images/writeups/glittercity-ost2/fig2.jpg)
+![The three calls zoomed in: each has a silent zone, never in the same place](/images/writeups/glittercity-ost2/fig2.en.jpg)
 
 Complementary erasures: where one call goes silent, the other two speak. With three copies and at most one
 erasure per position, two copies are always correct. **The majority vote is not an approximation, it is the exact
@@ -143,7 +143,7 @@ def ones(key):
 best = min(range(1 << 16), key=ones)    # 0x6AFA, 417 one-bits
 ```
 
-![Popcount for all 65,536 keys: 0x6AFA is the global minimum, 417 against ~636 at random](/images/writeups/glittercity-ost2/fig3.jpg)
+![Popcount for all 65,536 keys: 0x6AFA is the global minimum, 417 against ~636 at random](/images/writeups/glittercity-ost2/fig3.en.jpg)
 
 The brief's key is confirmed by the data. And 417 one-bits out of 1,272, i.e. 2.6 per byte: this is neither text
 nor compressed data. It is **sparse**.
@@ -171,7 +171,7 @@ longest repeat: 34 identical pulses
 
 A `reshape(7, 179)` and the image appears, in a 5 x 7 font:
 
-![The reconstructed raster: STARPWN{THIS_WAS_OFF_TOO_MUCH}](/images/writeups/glittercity-ost2/fig4.jpg)
+![The reconstructed raster: STARPWN{THIS_WAS_OFF_TOO_MUCH}](/images/writeups/glittercity-ost2/fig4.en.jpg)
 
 It is the same principle as a fax or a weather-satellite APT image: geometry reads in the repetitions.
 

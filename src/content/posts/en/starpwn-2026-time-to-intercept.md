@@ -6,7 +6,7 @@ event: Starpwn CTF 2026
 category: Space Operations
 kind: writeup
 tags: [starpwn-2026, orbital-mechanics, hohmann, phasing]
-image: /images/writeups/time-to-intercept/fig1.jpg
+image: /images/writeups/time-to-intercept/fig1.en.jpg
 imageAlt: "Hohmann transfer: the transfer ellipse between the low orbit and the target orbit"
 ---
 
@@ -27,7 +27,7 @@ transfer. One burn places the craft on an ellipse whose perigee touches the depa
 touches the arrival orbit. You travel half the ellipse — exactly 180° — which takes half the period of that
 ellipse.
 
-![Hohmann transfer: the burn injects onto the ellipse, the apogee touches the target orbit](/images/writeups/time-to-intercept/fig1.jpg)
+![Hohmann transfer: the burn injects onto the ellipse, the apogee touches the target orbit](/images/writeups/time-to-intercept/fig1.en.jpg)
 
 ## The real core: phasing
 
@@ -35,7 +35,7 @@ Computing the delta-v is not enough. Arriving on the right orbit while the targe
 Earth is useless. You have to burn at the instant when the target has, ahead of you, the **angular lead** that
 will bring it to the rendezvous exactly when you get there.
 
-![At burn the target must have the lead theta; half a period later the two meet](/images/writeups/time-to-intercept/fig2.jpg)
+![At burn the target must have the lead theta; half a period later the two meet](/images/writeups/time-to-intercept/fig2.en.jpg)
 
 The rendezvous is at apogee, 180° from the burn point. During the transfer time, the target (angular velocity ω₂)
 covers ω₂·t_t. So it must sit, at burn, at θ = π − ω₂·t_t ahead of us. Our low orbit turns faster (ω₁ > ω₂), so

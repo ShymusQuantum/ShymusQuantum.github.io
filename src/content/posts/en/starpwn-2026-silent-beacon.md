@@ -6,7 +6,7 @@ event: Starpwn CTF 2026
 category: Space Operations
 kind: writeup
 tags: [starpwn-2026, ccsds, telemetry, forensics]
-image: /images/writeups/silent-beacon/fig1.jpg
+image: /images/writeups/silent-beacon/fig1.en.jpg
 imageAlt: "Mode field across 89 packets: 29 clearly step outside the 0 to 7 range"
 ---
 
@@ -67,7 +67,7 @@ The dictionary says the `mode` field (offset 12) is between **0 and 7**: the eig
 SCIENCE…). In ops, that is exactly the kind of limit that raises an alarm on the ground. So I look for the
 packets that violate it.
 
-![The mode field across 89 packets: 60 in the green band, 29 out of range](/images/writeups/silent-beacon/fig1.jpg)
+![The mode field across 89 packets: 60 in the green band, 29 out of range](/images/writeups/silent-beacon/fig1.en.jpg)
 
 29 packets leave the range, and all their values land between 48 and 125: **printable ASCII**. The satellite
 hijacked a numeric field to slip one character per packet.
@@ -84,7 +84,7 @@ A flag that falls out of a single criterion always leaves a doubt. The format of
 witness: `error_flags` (offset 13), whose bit 7 is named `ANOMALY`. If both criteria point to the same packets,
 it is no coincidence.
 
-![Mode out of range (red) and ANOMALY bit (blue): the two curves overlap exactly](/images/writeups/silent-beacon/fig2.jpg)
+![Mode out of range (red) and ANOMALY bit (blue): the two curves overlap exactly](/images/writeups/silent-beacon/fig2.en.jpg)
 
 ```text
 packets with mode > 7                         : 29

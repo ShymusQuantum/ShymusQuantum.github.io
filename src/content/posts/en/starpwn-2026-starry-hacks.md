@@ -6,7 +6,7 @@ event: Starpwn CTF 2026
 category: Supply chain
 kind: writeup
 tags: [starpwn-2026, supply-chain, dependencies, flight-software]
-image: /images/writeups/starry-hacks/fig1.jpg
+image: /images/writeups/starry-hacks/fig1.en.jpg
 imageAlt: "Diagram of the attack chain, from requirements.txt to onboard execution"
 ---
 
@@ -48,7 +48,7 @@ execution path.
 
 ## The full chain
 
-![Diagram: from the permissive requirements.txt to onboard execution during a contact window](/images/writeups/starry-hacks/fig1.jpg)
+![Diagram: from the permissive requirements.txt to onboard execution during a contact window](/images/writeups/starry-hacks/fig1.en.jpg)
 
 The most interesting part is not the attack itself but its **space constraints**, and that is where I stumbled
 several times:

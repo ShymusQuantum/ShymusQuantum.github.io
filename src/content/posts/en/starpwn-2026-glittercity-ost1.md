@@ -6,7 +6,7 @@ event: Starpwn CTF 2026
 category: Space Comms & RF
 kind: writeup
 tags: [starpwn-2026, rf, fsk, doppler, hdlc, steganography]
-image: /images/writeups/glittercity-ost1/fig2.jpg
+image: /images/writeups/glittercity-ost1/fig2.en.jpg
 imageAlt: "L-R channel spectrogram: two FSK tones sliding down under the Doppler effect"
 ---
 
@@ -43,11 +43,11 @@ x, fs = sf.read("Glittercity-OST1.mp3")
 d = x[:, 0] - x[:, 1]
 ```
 
-![Power 7.5-15 kHz: nothing in L+R, a signal 25 dB stronger in L-R between 15 and 105 s](/images/writeups/glittercity-ost1/fig1.jpg)
+![Power 7.5-15 kHz: nothing in L+R, a signal 25 dB stronger in L-R between 15 and 105 s](/images/writeups/glittercity-ost1/fig1.en.jpg)
 
 ## Reading the spectrogram
 
-![L-R channel: two parallel lines ~2 kHz apart, sliding from 14.2/12.2 kHz down to 10/8 kHz](/images/writeups/glittercity-ost1/fig2.jpg)
+![L-R channel: two parallel lines ~2 kHz apart, sliding from 14.2/12.2 kHz down to 10/8 kHz](/images/writeups/glittercity-ost1/fig2.en.jpg)
 
 Three facts read directly:
 
@@ -89,7 +89,7 @@ FLAG=STARPWN{Syn7h_v1be$_fr0m_0rb1t}
 The message repeats frame after frame. On a noisy Doppler link, each copy has its errors, but never at the same
 positions. A majority vote character by character wipes them out.
 
-![Four raw copies of the flag, errors in red at different positions, and the majority vote](/images/writeups/glittercity-ost1/fig3.jpg)
+![Four raw copies of the flag, errors in red at different positions, and the majority vote](/images/writeups/glittercity-ost1/fig3.en.jpg)
 
 ```text
 STARPWN{Syn7h_v1be$_fr0m_0rb1t}

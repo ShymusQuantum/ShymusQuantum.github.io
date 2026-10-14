@@ -6,7 +6,7 @@ event: Starpwn CTF 2026
 category: Space Comms & RF
 kind: writeup
 tags: [starpwn-2026, rf, morse, cw, beacon]
-image: /images/writeups/beaconing-from-above/fig2.jpg
+image: /images/writeups/beaconing-from-above/fig2.en.jpg
 imageAlt: "Histograms of tone and silence durations: two and three sharp peaks"
 ---
 
@@ -32,7 +32,7 @@ between symbols, 3 between letters, 7 between words). Decoding means measuring o
 
 No need to demodulate. I rectify the signal, smooth it, and a threshold separates "tone on" from "silence".
 
-![Envelope of the first six seconds: yellow zones are the active tones](/images/writeups/beaconing-from-above/fig1.jpg)
+![Envelope of the first six seconds: yellow zones are the active tones](/images/writeups/beaconing-from-above/fig1.en.jpg)
 
 ```python
 import numpy as np
@@ -52,7 +52,7 @@ I then split `on` into consecutive ON/OFF runs and look at the histogram of thei
 measurement that unlocks everything: if it is really morse, the durations take only a handful of values, in the
 ratios 1 : 3 : 7.
 
-![Tone durations (98 ms and 294 ms) and silences (98, 294 and ~686 ms)](/images/writeups/beaconing-from-above/fig2.jpg)
+![Tone durations (98 ms and 294 ms) and silences (98, 294 and ~686 ms)](/images/writeups/beaconing-from-above/fig2.en.jpg)
 
 Bimodal for the tones, trimodal for the silences, exactly in the canonical ratios. **The unit is 98 ms**, about
 **12 words per minute** with the PARIS convention (speed ≈ 1200 / dot duration in ms). The decision thresholds
