@@ -6,7 +6,7 @@ export type Lang = (typeof LANGS)[number];
 // Intro de l'accueil, identique dans les deux langues
 export const HERO = {
   hello: "hi! i'm Shymus",
-  role: 'Researcher',
+  role: 'Aerospace Cybersecurity Researcher',
   title: 'cybersecurity, satellite & sigint.',
 };
 
