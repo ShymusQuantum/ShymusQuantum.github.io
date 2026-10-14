@@ -3,15 +3,20 @@
 export const LANGS = ['fr', 'en'] as const;
 export type Lang = (typeof LANGS)[number];
 
+// Intro de l'accueil, identique dans les deux langues
+export const HERO = {
+  hello: "hi! i'm Shymus",
+  role: 'Researcher',
+  title: 'cybersecurity, satellite & sigint.',
+};
+
 export const UI = {
   fr: {
     tagline: 'cybersécurité, radio & satellites',
     description: 'Recherches en cybersécurité, radio logicielle et satellites, par ShymusQuantum.',
     nav: { posts: 'articles', writeups: 'writeups', tags: 'tags', contact: 'contact', about: 'à propos' },
     skip: 'Aller au contenu',
-    hello: "// salut, moi c'est",
-    heroTitle: 'cybersécurité, ondes radio & satellites.',
-    heroBio: "Je documente ici mes recherches : réception et décodage de signaux satellites, radio logicielle, sécurité des systèmes spatiaux, CTF et tout ce qui m'empêche de dormir la nuit.",
+    heroBio: "Je documente ici mes pensées et mes recherches : tout ce qui gravite autour de la cybersécurité spatiale, des signaux que les satellites murmurent vers la Terre aux stations sol qui leur répondent. Ondes, protocoles, CTF et nuits blanches à écouter le ciel.",
     readPosts: 'lire les articles →',
     whoAmI: 'qui suis-je →',
     latest: 'derniers articles',
@@ -45,9 +50,7 @@ export const UI = {
     description: 'Research in cybersecurity, software-defined radio and satellites, by ShymusQuantum.',
     nav: { posts: 'posts', writeups: 'writeups', tags: 'tags', contact: 'contact', about: 'about me' },
     skip: 'Skip to content',
-    hello: "// hey, I'm",
-    heroTitle: 'cybersecurity, radio waves & satellites.',
-    heroBio: 'This is where I document my research: receiving and decoding satellite signals, software-defined radio, space systems security, CTFs and everything else that keeps me up at night.',
+    heroBio: 'This is where I document my thoughts and research: everything orbiting space cybersecurity, from the signals satellites whisper down to Earth to the ground stations that answer them. Radio waves, protocols, CTFs and sleepless nights spent listening to the sky.',
     readPosts: 'read the posts →',
     whoAmI: 'about me →',
     latest: 'latest posts',

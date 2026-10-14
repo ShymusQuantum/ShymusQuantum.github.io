@@ -59,7 +59,8 @@ main { flex: 1; }
 
 /* Héros de l'accueil */
 .hero { min-height: min(78vh, 760px); display: flex; flex-direction: column; justify-content: center; padding-block: 40px 60px; }
-.hello { font: 0.95rem var(--f-mono); color: var(--muted); margin: 0 0 14px; }
+.hello { font: 600 1.15rem var(--f-mono); color: var(--head); margin: 0 0 4px; }
+.role { font: 0.78rem var(--f-mono); letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin: 0 0 20px; }
 .hero h1 {
   font: 700 clamp(2.1rem, 6vw, 3.6rem)/1.05 var(--f-display); color: var(--head);
   margin: 0 0 22px; letter-spacing: -0.01em; text-wrap: balance; max-width: 15ch;

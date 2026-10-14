@@ -1,8 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import PostCard from '../components/PostCard.astro';
-import { SITE, getPosts } from '../site';
-import { UI, href, type Lang } from '../i18n';
+import { getPosts } from '../site';
+import { UI, HERO, href, type Lang } from '../i18n';
 const { lang } = Astro.props as { lang: Lang };
 const t = UI[lang];
 const articles = await getPosts(lang, 'article');
@@ -11,8 +11,9 @@ const latest = [...articles.filter((p) => p.data.featured), ...articles.filter((
 ---
 <Base lang={lang}>
   <section class="hero container">
-    <p class="hello">{t.hello} {SITE.author}.</p>
-    <h1>{t.heroTitle}</h1>
+    <p class="hello">{HERO.hello}</p>
+    <p class="role">{HERO.role}</p>
+    <h1>{HERO.title}</h1>
     <p class="bio">{t.heroBio}</p>
     <div class="links">
       <a href={href(lang, '/posts/')}>{t.readPosts}</a>
