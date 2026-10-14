@@ -1,7 +1,7 @@
 ---
 title: "Satellite Networks and Their Vulnerabilities"
 description: "A full research report: from electromagnetic waves to LEO constellations, the whole satellite communication chain read through a cybersecurity lens."
-date: 2026-09-28
+date: 2025-12-15
 category: Satellites & Cybersecurity
 kind: article
 featured: true

@@ -1,7 +1,7 @@
 ---
 title: "Reverse Engineering and Decoding of Satellite Communications"
 description: "From listening to a satellite to reverse-engineering its links: antennas, SDR, NOAA APT weather imagery, DVB-S2, space protocols and communication security, end to end."
-date: 2026-10-05
+date: 2026-05-19
 category: Satellites & Cybersecurity
 kind: article
 featured: true

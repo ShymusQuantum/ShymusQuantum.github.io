@@ -1,7 +1,7 @@
 ---
 title: "Reverse engineering et décodage des communications satellitaires"
 description: "De l'écoute d'un satellite à la rétro-ingénierie des liaisons : antennes, SDR, APT météo, DVB-S2, protocoles spatiaux et sécurité des communications, bout à bout."
-date: 2026-10-05
+date: 2026-05-19
 category: Satellites & Cybersécurité
 kind: article
 featured: true

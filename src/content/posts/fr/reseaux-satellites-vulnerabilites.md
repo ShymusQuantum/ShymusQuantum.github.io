@@ -1,7 +1,7 @@
 ---
 title: "Étude des réseaux satellites et de leurs vulnérabilités"
 description: "Un rapport de recherche complet : des ondes électromagnétiques aux constellations LEO, toute la chaîne de communication satellitaire lue sous l'angle cybersécurité."
-date: 2026-09-28
+date: 2025-12-15
 category: Satellites & Cybersécurité
 kind: article
 featured: true
