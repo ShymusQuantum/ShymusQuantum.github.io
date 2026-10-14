@@ -1,0 +1,17 @@
+---
+import { formatDate, readingTime } from '../site';
+const { post } = Astro.props;
+const d = post.data;
+---
+<a class:list={['card', { noimg: !d.image }]} href={`/posts/${post.id}/`}>
+  {d.image && <div class="thumb"><img src={d.image} alt={d.imageAlt ?? ''} loading="lazy" /></div>}
+  <div class="body">
+    <span class="cat">{d.category}</span>
+    <h3>{d.title}</h3>
+    <p>{d.description}</p>
+    <div class="meta">
+      <time datetime={d.date.toISOString()}>{formatDate(d.date)}</time>
+      <span>{readingTime(post.body)} min de lecture</span>
+    </div>
+  </div>
+</a>

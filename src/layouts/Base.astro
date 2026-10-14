@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+import Sky from '../components/Sky.astro';
+import { SITE, NAV } from '../site';
+
+interface Props { title?: string; description?: string; image?: string; dim?: number }
+const { title, description = SITE.description, image, dim = 1 } = Astro.props;
+const fullTitle = title ? `${title} · ${SITE.title}` : `${SITE.title} · ${SITE.tagline}`;
+const path = Astro.url.pathname;
+const ogImage = new URL(image ?? '/images/og.jpg', Astro.site);
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#02040a" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={new URL(path, Astro.site)} />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;600&display=swap" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Aller au contenu</a>
+    <Sky dim={dim} />
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="/">ShymusQuantum<span>_</span></a>
+        <nav class="nav" aria-label="Navigation principale">
+          {NAV.map((l) => <a href={l.href} aria-current={path.startsWith(l.href) ? 'page' : undefined}>{l.label}</a>)}
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        <span>© {new Date().getFullYear()} {SITE.author} · <a href="/rss.xml">rss</a></span>
+        <span><a href={SITE.github}>github</a></span>
+      </div>
+    </footer>
+  </body>
+</html>

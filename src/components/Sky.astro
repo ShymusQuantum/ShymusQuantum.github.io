@@ -1,0 +1,10 @@
+---
+interface Props { dim?: number }
+const { dim = 1 } = Astro.props;
+---
+<canvas id="sky" data-dim={dim} aria-hidden="true"></canvas>
+<script>
+  import { startSky } from '../scripts/sky.js';
+  const c = document.getElementById('sky') as HTMLCanvasElement | null;
+  if (c) startSky(c);
+</script>

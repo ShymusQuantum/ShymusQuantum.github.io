@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../site';
+---
+<Base title="À propos" description={`Qui est ${SITE.author}.`} dim={0.6}>
+  <div class="container">
+    <div class="page-panel prose">
+      <h1 class="page-title">à propos</h1>
+      <p>
+        Salut, moi c'est <strong>{SITE.author}</strong>. Passionné de cybersécurité et de tout ce qui tourne
+        autour de la Terre, j'écris ici ce que j'apprends : réception de satellites, radio logicielle (SDR),
+        sécurité des systèmes spatiaux et CTF.
+      </p>
+      <p><em>Texte à personnaliser : ton parcours, ce que tu cherches, ton matériel, comment te contacter.</em></p>
+      <h2>me trouver</h2>
+      <ul>
+        <li><a href={SITE.github}>GitHub</a></li>
+        <li><a href="/rss.xml">Flux RSS</a></li>
+      </ul>
+    </div>
+  </div>
+</Base>

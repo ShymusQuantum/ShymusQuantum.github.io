@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import { getPosts } from '../site';
+const posts = await getPosts();
+const years = [...new Set(posts.map((p) => p.data.date.getFullYear()))];
+---
+<Base title="Archives" description="Tous les articles, par année." dim={0.7}>
+  <div class="container">
+    <div class="page-panel">
+      <h1 class="page-title">archives</h1>
+      {years.map((y) => (
+        <>
+          <p class="archive-year">{y}</p>
+          <ul class="archive">
+            {posts.filter((p) => p.data.date.getFullYear() === y).map((p) => (
+              <li>
+                <time datetime={p.data.date.toISOString()}>{p.data.date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}</time>
+                <a href={`/posts/${p.id}/`}>{p.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        </>
+      ))}
+    </div>
+  </div>
+</Base>

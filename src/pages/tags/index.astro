@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getPosts, slugify } from '../../site';
+const posts = await getPosts();
+const counts = new Map<string, number>();
+posts.forEach((p) => p.data.tags.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)));
+const tags = [...counts].sort((a, b) => b[1] - a[1]);
+---
+<Base title="Tags" description="Les articles par sujet." dim={0.7}>
+  <div class="container">
+    <div class="page-panel">
+      <h1 class="page-title">tags</h1>
+      <div class="tags">
+        {tags.map(([t, n]) => <a class="tag" href={`/tags/${slugify(t)}/`}>#{t} <small>{n}</small></a>)}
+      </div>
+    </div>
+  </div>
+</Base>
