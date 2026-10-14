@@ -1,7 +1,7 @@
 ---
 import { render, getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import { formatDate, readingTime, slugify, postSlug } from '../site';
+import { formatDate, slugify, postSlug } from '../site';
 import { UI, href, other, type Lang } from '../i18n';
 const { post, lang } = Astro.props as { post: any; lang: Lang };
 const t = UI[lang];
@@ -21,7 +21,6 @@ const backTo = href(lang, d.kind === 'writeup' ? '/writeups/' : '/posts/');
       <h1 class="page-title">{d.title}</h1>
       <div class="meta" style="margin-bottom:22px">
         <time datetime={d.date.toISOString()}>{formatDate(d.date, lang)}</time>
-        <span>{readingTime(post.body)} {t.minRead}</span>
       </div>
       {d.image && <figure class="post-cover"><img src={d.image} alt={d.imageAlt ?? ''} /></figure>}
       <div class="prose"><Content /></div>

@@ -1,5 +1,5 @@
 ---
-import { formatDate, readingTime, postSlug } from '../site';
+import { formatDate, postSlug } from '../site';
 import { UI, href, type Lang } from '../i18n';
 interface Props { post: any; lang: Lang }
 const { post, lang } = Astro.props;
@@ -13,7 +13,6 @@ const d = post.data;
     <p>{d.description}</p>
     <div class="meta">
       <time datetime={d.date.toISOString()}>{formatDate(d.date, lang)}</time>
-      <span>{readingTime(post.body)} {UI[lang].minRead}</span>
     </div>
   </div>
 </a>
