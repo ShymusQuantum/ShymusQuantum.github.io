@@ -153,5 +153,3 @@ STARPWN{B34C0N_D3C0D3D_V14_R4D10}
 Et la balise finit par décliner son identité, mot après mot, comme un phare qui donne son nom :
 `STARPWN{B34C0N_D3C0D3D_V14_R4D10}`, validé sur la plateforme. Décodage obtenu par mesure directe de l'unité
 morse (100 ms, ~12 mots/min) sur les 217 tons du fichier.
-
-![Le scoreboard en fin de compétition : les cinq challenges résolus dans l'ordre — Silent Beacon (14 h 23), Beaconing (14 h 28), OST1 (14 h 59), Starry hacks (23 h 26) et OST2 à 4 h 23 du matin.](/images/writeups/beaconing-from-above/fig3.jpg)
