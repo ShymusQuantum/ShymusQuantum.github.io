@@ -22,86 +22,18 @@ CHANDELIER-7
 2 25544  51.6317 105.9876 0006941 339.4731  20.5977 15.49181604577830
 ```
 
-## Désamorcer le leurre
-
-Quand on a passé du temps sur des TLE, `25544` saute aux yeux : c'est le numéro NORAD de la **Station spatiale
-internationale**. Inclinaison 51,6°, 15,49 révolutions par jour, tout colle. « CHANDELIER-7 » n'est qu'un
-déguisement.
-
-Ce TLE ouvre une impasse séduisante : propager l'orbite, géolocaliser la station sol par le Doppler, vérifier
-que l'altitude ressort vers 415 km… Sauf que l'ISS est **toujours** vers 415 km. Ce critère ne peut pas échouer,
-donc il ne prouve rien. Je mets le TLE de côté et j'écoute le fichier.
-
-## Le canal L-R
-
-Devant un fichier stéréo, mon premier réflexe est la différence des canaux. Un signal injecté en opposition de
-phase (identique à gauche, inversé à droite) s'annule dans L+R, donc en mono et à l'oreille, mais ressort en
-pleine puissance dans L−R, où la musique commune aux deux pistes s'efface.
-
-```python
-import numpy as np, soundfile as sf
-x, fs = sf.read("Glittercity-OST1.mp3")
-d = x[:, 0] - x[:, 1]
-```
-
-![Puissance 7,5–15 kHz : rien dans L+R, un signal 25 dB plus fort dans L−R entre 15 et 105 s](/images/writeups/glittercity-ost1/fig1.jpg)
-
-## Lire le spectrogramme
-
-![Canal L−R : deux raies parallèles à ~2 kHz d'écart, qui glissent de 14,2/12,2 kHz vers 10/8 kHz](/images/writeups/glittercity-ost1/fig2.jpg)
-
-Trois faits se lisent directement :
-
-1. **Deux tons en alternance**, écart constant d'environ 2 kHz : du FSK.
-2. **Une descente régulière** des deux raies : la signature Doppler d'un émetteur qui s'éloigne pendant son passage.
-3. **Une seule salve** continue de 90 secondes.
-
-## Retirer le Doppler, puis décider
-
-Comme un seul ton est actif à la fois, la fréquence instantanée suit une ligne de base qui dérive lentement (le
-Doppler), avec un petit saut haut/bas par-dessus (le bit). Une médiane glissante sur plusieurs symboles capture
-la dérive ; ce qui reste après soustraction est le saut FSK, dont le signe donne le bit. C'est du
-**déchirpage** : ramener une porteuse qui glisse à une référence fixe.
-
-```python
-from scipy.signal import hilbert, medfilt
-phase = np.unwrap(np.angle(hilbert(d)))
-f_inst = np.diff(phase) * fs / (2 * np.pi)
-baseline = medfilt(f_inst, 5 * 160 + 1)     # ~5 symboles à 300 bauds
-bits = (f_inst - baseline) > 0
-```
-
-Le débit se mesure sur les durées de symboles : **300 bauds** (160 échantillons à 48 kHz). Il reste les
-conventions de lecture ; je teste les combinaisons et je garde celle qui donne du texte : **bits inversés,
-octets LSB d'abord**.
-
-## Déframer le HDLC
-
-Le flux est découpé en trames HDLC encadrées par le fanion `0x7E` (`01111110`). Pour qu'un fanion n'apparaisse
-jamais dans les données, l'émetteur insère un 0 après cinq 1 consécutifs (*bit stuffing*), que le récepteur
-retire. C'est le même tramage que l'AX.25 utilisé par une bonne partie des CubeSats amateurs.
-
-```text
-CHANDELIER-7
-FLAG=STARPWN{Syn7h_v1be$_fr0m_0rb1t}
-```
-
-## La redondance comme preuve
-
-Le message est répété trame après trame. Sur une liaison Doppler bruitée, chaque copie a ses erreurs, mais
-jamais aux mêmes positions. Un vote majoritaire caractère par caractère les efface.
-
-![Quatre copies brutes du flag, erreurs en rouge à des positions différentes, et le vote majoritaire](/images/writeups/glittercity-ost1/fig3.jpg)
-
-```text
-STARPWN{Syn7h_v1be$_fr0m_0rb1t}
-```
-
-Saisie : `Syn7h` avec un 7, `v1be$` avec un 1 et un dollar, des zéros dans `fr0m_0rb1t`.
-
-## Ce que j'en retiens
-
-- **Un critère qui ne peut pas échouer ne prouve rien.** L'altitude « cohérente » de l'ISS était de la fausse confiance.
-- **Fichier stéréo : regarder L−R d'abord.**
-- **Mesurer la modulation plutôt que la deviner.** Deux tons, une pente, une durée de symbole : le spectrogramme donne tout.
-- **La redondance est une preuve.** Un flag issu d'un vote sur des dizaines de trames ne doit rien à la chance.
+<div style="margin:30px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel)">
+  <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)">
+    <div>
+      <strong style="color:var(--head);font-family:var(--f-display);letter-spacing:.02em">Writeup complet — PDF</strong>
+      <div style="color:var(--muted);font-size:.82rem;margin-top:2px">4 pages · français</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <a href="/writeups-pdf/glittercity-ost1.pdf" target="_blank" rel="noopener" style="padding:9px 15px;border-radius:8px;background:var(--accent);color:#06101f;text-decoration:none;font:600 .82rem var(--f-display)">Plein écran ↗</a>
+      <a href="/writeups-pdf/glittercity-ost1.pdf" download style="padding:9px 15px;border-radius:8px;border:1px solid var(--line);color:var(--fg);text-decoration:none;font:600 .82rem var(--f-display)">Télécharger</a>
+    </div>
+  </div>
+  <object data="/writeups-pdf/glittercity-ost1.pdf#view=FitH" type="application/pdf" style="width:100%;height:600px;display:block;background:#06101f;border:0">
+    <p style="padding:22px;margin:0;color:var(--muted)">Ton navigateur n'affiche pas le PDF ici — <a href="/writeups-pdf/glittercity-ost1.pdf" style="color:var(--accent)">ouvre-le dans un onglet</a>.</p>
+  </object>
+</div>
